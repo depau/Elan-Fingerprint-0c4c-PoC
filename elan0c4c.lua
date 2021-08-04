@@ -12,16 +12,16 @@ function cmd_name(cmd)
 
     if     cmd == 0xFF03 then name = "Check finger"
     elseif cmd == 0xFF12 then name = "Verify"
-    elseif cmd == 0xFF10 then name = "maybe Delete"
+    elseif cmd == 0xFF10 then name = "Something after enroll"
     elseif cmd == 0xFF11 then name = "Commit"
-    elseif cmd ==   0x19 then name = "lfp Firmware version"
+    elseif cmd ==   0x19 then name = "Firmware version"
     elseif cmd ==   0x0c then name = "lfp Sensor dim"
     elseif cmd == 0xff00 then name = "lfp Get status"
-    elseif cmd == 0xff04 then name = "lfp Get enrolled num"
-    elseif cmd == 0xff73 then name = "lfp Verify"
+    elseif cmd == 0xff04 then name = "Get enrolled count"
+    elseif cmd == 0xff73 then name = "Verify"
     elseif cmd == 0xff02 then name = "Abort"
-    elseif cmd == 0xff01 then name = "lfp Enroll"
-    elseif cmd == 0xff13 then name = "lfp Delete"
+    elseif cmd == 0xff01 then name = "Enroll"
+    elseif cmd == 0xff13 then name = "Delete finger"
     elseif cmd == 0xff98 then name = "lfp Delete all"
     elseif cmd == 0x2100 then name = "lfp Get user ID"
     elseif cmd == 0xff15 then name = "lfp Set mod"
@@ -65,6 +65,7 @@ function elanmoc_proto.dissector(buffer, pinfo, tree)
     end
 
     local subtree = tree:add(elanmoc_proto, buffer(), "ELAN Fingerprint Match-on-Chip (" .. cmdname .. ")")
+    pinfo.cols.info = "ELAN MoC " .. cmdname
     
     subtree:add(f_header, buffer(0,1))
 
