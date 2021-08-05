@@ -23,6 +23,13 @@ To output the dissection, first make sure there are no `URB_BULK` packets that a
 Then, after making sure **all** packets referring to the device are **not** filtered, export
 the JSON from `File` > `Export Packet Dissections` > `As JSON...`.
 
+## Wireshark dissector
+
+A simple WireShark dissector is also provided. It's very basic.
+
+It can be dropped into the Lua plugins directory, then you can right-click a packet and select
+"Decode as..." > ELANMOC.
+
 ## Actual PoC
 
 To be written
