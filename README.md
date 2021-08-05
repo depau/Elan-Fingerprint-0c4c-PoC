@@ -30,9 +30,38 @@ A simple WireShark dissector is also provided. It's very basic.
 It can be dropped into the Lua plugins directory, then you can right-click a packet and select
 "Decode as..." > ELANMOC.
 
-## Actual PoC
+## PoC
 
-To be written
+RE still ongoing, an initial PoC is available:
+
+```
+ELAN 04F3:0C4C Match-on-Chip fingerprint reader driver PoC.
+
+Usage:
+    ./elanfp.py -h | --help
+    ./elanfp.py reset
+    ./elanfp.py finger_info <id>
+    ./elanfp.py verify
+    ./elanfp.py enrolled_count
+    ./elanfp.py enroll
+    ./elanfp.py delete_all
+    ./elanfp.py fw_ver
+    ./elanfp.py raw (-e EP) <hex>...
+
+Options:
+-h, --help         Show help
+-e EP, --ep-in EP  Input endpoint for raw commands
+
+Commands:
+reset              Reset sensor
+finger_info <id>   Get finger info
+verify             Verify finger
+enrolled_count     Get number of fingers currently enrolled
+enroll             Enroll a new finger
+delete_all         Delete all enrolled fingers
+fw_ver             Get firmware version
+raw                Send raw command
+```
 
 ## License
 

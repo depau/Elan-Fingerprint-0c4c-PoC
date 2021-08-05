@@ -1,3 +1,4 @@
 docopt
 libusb1
 pyjq
+hexdump
