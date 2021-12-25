@@ -1,4 +1,5 @@
 docopt
-libusb1
-pyjq
 hexdump
+libusb1
+pillow
+pyjq
