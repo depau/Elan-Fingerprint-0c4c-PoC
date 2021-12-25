@@ -43,14 +43,18 @@ Usage:
     ./elanfp.py finger_info <id>
     ./elanfp.py verify
     ./elanfp.py enrolled_count
-    ./elanfp.py enroll
+    ./elanfp.py enroll (-u UD)
+    ./elanfp.py delete <id>
+    ./elanfp.py finger_info_all
     ./elanfp.py delete_all
     ./elanfp.py fw_ver
+    ./elanfp.py capture <png>
     ./elanfp.py raw (-e EP) <hex>...
 
 Options:
 -h, --help         Show help
 -e EP, --ep-in EP  Input endpoint for raw commands
+-u UD. --user UD   User data for enroll command
 
 Commands:
 reset              Reset sensor
@@ -58,8 +62,10 @@ finger_info <id>   Get finger info
 verify             Verify finger
 enrolled_count     Get number of fingers currently enrolled
 enroll             Enroll a new finger
+delete <id>        Delete finger
 delete_all         Delete all enrolled fingers
 fw_ver             Get firmware version
+capture            Capture image into a PNG file
 raw                Send raw command
 ```
 
