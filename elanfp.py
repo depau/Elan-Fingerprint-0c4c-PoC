@@ -72,8 +72,11 @@ ERRORS = {
     0xdd: "Maximum number of enrolled fingers reached"
 }
 
-ID_VENDOR = 0x04f3
-ID_PRODUCT = 0x0c4c
+DEVICES = (
+    (0x04f3, 0x0c00),  # HP Pavilion 15-eh2xxx
+    (0x04f3, 0x0c4c),  # HP Spectre x360 14-ea0x
+    (0x04f3, 0x0c5e),  # HP Probook 440 G8
+)
 IFACE = 0
 
 
@@ -199,8 +202,11 @@ def delete(handle: usb1.USBDeviceHandle, fpid: int, payload: bytes):
 
 def main(args):
     with usb1.USBContext() as context:
-        handle = context.openByVendorIDAndProductID(ID_VENDOR, ID_PRODUCT)
-        if not handle:
+        for vid, pid in DEVICES:
+            handle = context.openByVendorIDAndProductID(vid, pid)
+            if handle:
+                break
+        else:
             raise OSError("Failed to open USB device")
 
         with handle.claimInterface(IFACE):
