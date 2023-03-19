@@ -14,6 +14,7 @@ Usage:
     ARGV0 delete <id>
     ARGV0 finger_info_all
     ARGV0 delete_all
+    ARGV0 wipe_all
     ARGV0 fw_ver
     ARGV0 raw (-e EP) <hex>...
 
@@ -29,7 +30,8 @@ verify             Verify finger
 enrolled_count     Get number of fingers currently enrolled
 enroll             Enroll a new finger
 delete <id>        Delete finger
-delete_all         Delete all enrolled fingers
+delete_all         Delete all enrolled fingers (one by one)
+wipe_all           Wipe all enrolled fingers (using special command)
 fw_ver             Get firmware version
 raw                Send raw command
 """
@@ -56,6 +58,7 @@ COMMANDS = {
     "enroll":        Command(b"\xff\x01", 7, 2, 1, 4),
     "after_enroll":  Command(b"\xff\x10", 3, 3, 1, 3),
     "delete":        Command(b"\xff\x13", 72, 2, 1, 3),
+    "wipe_all":      Command(b"\xff\x99", 3, 0, 1, None),
 }
 
 ERRORS = {
@@ -81,6 +84,10 @@ def command(usb: usb1.USBDeviceHandle, cmdname: str, payload: bytes = b"", timeo
         warnings.warn(f"Wrong command size: {len(cmd)} vs {outlen}")
 
     usb.bulkWrite(ep_out, cmd, timeout)
+
+    if inlen == 0 or ep_in is None:
+        return b""
+
     resp = usb.bulkRead(ep_in, inlen, timeout)
 
     if len(resp) < inlen:
@@ -247,6 +254,10 @@ def main(args):
                             continue
                         payload = (struct.pack("B", 0xf0 | (finger_id + 5)) + resp[2:]).ljust(69, b"\x00")
                         delete(handle, finger_id, payload)
+
+                elif args["wipe_all"]:
+                    print("Wiping all fingers")
+                    command(handle, "wipe_all")
 
             except Exception:
                 print("Aborting")
