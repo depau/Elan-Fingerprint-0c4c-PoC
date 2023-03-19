@@ -241,6 +241,7 @@ def main(args):
                     hexdump.hexdump(payload)
                     print()
                     handle.bulkWrite(1, payload, timeout=5000)
+                    print("Waiting for response...")
                     resp = handle.bulkRead(ep, 1000, timeout=5000)
                     print(f"Received [{len(resp)}]:")
                     hexdump.hexdump(resp)
@@ -261,6 +262,9 @@ def main(args):
                 elif args["wipe_all"]:
                     print("Wiping all fingers")
                     command(handle, "wipe_all")
+                    print("Checking if all fingers are wiped (~5 seconds)")
+                    resp = command(handle, "enrolled_num", timeout=10000)
+                    print(f"Enrolled fingers: {resp[1]}")
 
             except Exception:
                 print("Aborting")
