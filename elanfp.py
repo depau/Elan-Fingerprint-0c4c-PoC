@@ -48,17 +48,17 @@ from docopt import docopt
 Command = namedtuple("Command", ("command", "out_len", "in_len", "ep_out", "ep_in"))
 
 COMMANDS = {
-    "fw_ver":        Command(b"\x19", 2, 2, 1, 3),
-    "verify":        Command(b"\xff\x03", 3, 2, 1, 4),
-    "finger_info":   Command(b"\xff\x12", 4, 64, 1, 3),
-    "enrolled_num":  Command(b"\xff\x04", 3, 2, 1, 3),
-    "enrolled_num1": Command(b"\xff\x00", 3, 2, 1, 3),
-    "abort":         Command(b"\xff\x02", 3, 2, 1, 3),
-    "commit":        Command(b"\xff\x11", 72, 2, 1, 3),
-    "enroll":        Command(b"\xff\x01", 7, 2, 1, 4),
-    "after_enroll":  Command(b"\xff\x10", 3, 3, 1, 3),
-    "delete":        Command(b"\xff\x13", 72, 2, 1, 3),
-    "wipe_all":      Command(b"\xff\x99", 3, 0, 1, None),
+    "fw_ver":                    Command(b"\x19", 2, 2, 1, 3),
+    "verify":                    Command(b"\xff\x03", 3, 2, 1, 4),
+    "finger_info":               Command(b"\xff\x12", 4, 64, 1, 3),
+    "enrolled_num":              Command(b"\xff\x04", 3, 2, 1, 3),
+    "enrolled_num1":             Command(b"\xff\x00", 3, 2, 1, 3),
+    "abort":                     Command(b"\xff\x02", 3, 2, 1, 3),
+    "commit":                    Command(b"\xff\x11", 72, 2, 1, 3),
+    "enroll":                    Command(b"\xff\x01", 7, 2, 1, 4),
+    "check_enrolled_collision":  Command(b"\xff\x10", 3, 3, 1, 3),
+    "delete":                    Command(b"\xff\x13", 72, 2, 1, 3),
+    "wipe_all":                  Command(b"\xff\x99", 3, 0, 1, None),
 }
 
 ERRORS = {
@@ -141,10 +141,13 @@ def enroll(handle: usb1.USBDeviceHandle, user_data: bytes):
             continue
         attempts_done += 1
 
-    resp = command(handle, "after_enroll")
-    print(f"Whatever this means: {resp.hex(' ')}")
+    resp = command(handle, "check_enrolled_collision")
+    if resp[1] != 0:
+        colliding_finger = resp[2]
+        print(f"Error: Finger was already enrolled as finger {colliding_finger}")
+        return
 
-    print("Committing enrolled finger")
+    print("No collisions detected, committing enrolled finger")
     payload = (struct.pack("B", 0xf0 | (new_finger_id + 5)) + user_data).ljust(69, b"\x00")
     resp = command(handle, "commit", payload)
     if resp[1] == 0:
