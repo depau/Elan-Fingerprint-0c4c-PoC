@@ -10,22 +10,23 @@ elanmoc_proto.fields = { f_header, f_cmd, f_payload };
 function cmd_name(cmd)
     local name = "Unknown"
 
-    if     cmd == 0xFF03 then name = "Check finger"
+    if     cmd == 0xFF03 then name = "Verify finger"
     elseif cmd == 0xFF12 then name = "Get finger info"
-    elseif cmd == 0xFF10 then name = "Something after enroll"
+    elseif cmd == 0xFF10 then name = "Check re-enroll"
     elseif cmd == 0xFF11 then name = "Commit"
     elseif cmd ==   0x19 then name = "Firmware version"
-    elseif cmd ==   0x0c then name = "lfp Sensor dim"
-    elseif cmd == 0xff00 then name = "lfp Get status - enrolled count"
+    elseif cmd ==   0x0c then name = "old elanmoc - Sensor dim"
+    elseif cmd == 0xff00 then name = "old elanmoc - Get status - enrolled count"
     elseif cmd == 0xff04 then name = "Get enrolled count"
-    elseif cmd == 0xff73 then name = "lfp Verify"
+    elseif cmd == 0xff73 then name = "old elanmoc - Verify"
     elseif cmd == 0xff02 then name = "Abort"
     elseif cmd == 0xff01 then name = "Enroll"
     elseif cmd == 0xff13 then name = "Delete finger"
-    elseif cmd == 0xff98 then name = "lfp Delete all"
-    elseif cmd == 0x2100 then name = "lfp Get user ID"
-    elseif cmd == 0xff15 then name = "lfp Set mod"
-    elseif cmd == 0xff22 then name = "lfp Check reenroll"
+    elseif cmd == 0xff99 then name = "Delete all"
+    elseif cmd == 0xff98 then name = "old elanmoc - Delete all"
+    elseif cmd == 0x2100 then name = "old elanmoc - Get user ID"
+    elseif cmd == 0xff15 then name = "old elanmoc - Set mode"
+    elseif cmd == 0xff22 then name = "old elanmoc - Check reenroll"
     end
 
     return name
