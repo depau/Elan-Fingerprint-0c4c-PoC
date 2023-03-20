@@ -6,6 +6,7 @@ ELAN 04F3:0C4C Match-on-Chip fingerprint reader driver PoC.
 
 Usage:
     ARGV0 -h | --help
+    ARGV0 info
     ARGV0 reset
     ARGV0 finger_info <id>
     ARGV0 verify
@@ -24,6 +25,7 @@ Options:
 -u UD. --user UD   User data for enroll command
 
 Commands:
+info               Get device info
 reset              Reset sensor
 finger_info <id>   Get finger info
 verify             Verify finger
@@ -214,6 +216,18 @@ def main(args):
                 if args["reset"]:
                     handle.resetDevice()
 
+                elif args["info"]:
+                    dev: usb1.USBDevice = handle.getDevice()
+                    print("Bus:", dev.getBusNumber())
+                    print("Address:", dev.getDeviceAddress())
+                    print("VID:PID: %04x:%04x" % (dev.getVendorID(), dev.getProductID()))
+                    print("Manufacturer:", dev.getManufacturer())
+                    print("Product:", dev.getProduct())
+                    print("Serial number:", dev.getSerialNumber())
+
+                    resp = command(handle, "fw_ver")
+                    print(f"Firmware version: {resp[0]}.{resp[1]}")
+
                 elif args["verify"]:
                     verify(handle)
 
@@ -272,7 +286,7 @@ def main(args):
                     resp = command(handle, "enrolled_num", timeout=10000)
                     print(f"Enrolled fingers: {resp[1]}")
 
-            except Exception:
+            except (Exception, KeyboardInterrupt) as e:
                 print("Aborting")
                 handle.bulkWrite(1, b"\40" + COMMANDS["abort"].command)
                 raise
