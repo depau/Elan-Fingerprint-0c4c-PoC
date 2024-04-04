@@ -85,3 +85,5 @@ elanmoc_proto:register_heuristic("usb.bulk", heuristic)
 
 local usb_product_table = DissectorTable.get("usb.product")
 usb_product_table:add(0x0c4c, elanmoc_proto)
+usb_product_table:add(0x0c00, elanmoc_proto)
+usb_product_table:add(0x0c5e, elanmoc_proto)
